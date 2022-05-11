@@ -1,5 +1,5 @@
 clc,clear,close all
-N = 50;
+N = 100;
 q = zeros(4*N-1,1);
 qd = zeros(4*N-1,1);
 kappabarlist = zeros([N-2,2]);
@@ -18,7 +18,7 @@ A = pi*r0^2;
 EA = E*A;
 EI = E*I;
 GJ = G*J;
-M =eye(4*N-1);
+M = eye(4*N-1);
 M = M*(A*l*rou/(N-1));
 for i = 1:N
     if i == N
@@ -58,12 +58,31 @@ time = 5;
 q_whole = zeros(4*N-1,time/dt);
 qd_whole = zeros(4*N-1,time/dt);
 kappanew = zeros(N-2,2);
+
+for m = 1:N-1
+    tk1 =(q_new(4*m+1:4*m+3) - q_new(4*m-3:4*m-1))/norm((q_new(4*m+1:4*m+3) - q_new(4*m-3:4*m-1)));
+    if m == 1
+       u1(m,:) = u11;
+    else
+       u1(m,:) = parallel_transport(u1(m-1,:)',tk_new(m-1,:)',tk1);
+    end
+    a1_new(m,:) = u1(m,:);      
+    a2_new(m,:)= cross(tk1,a1_new(m,:));
+    u2(m,:)= cross(tk1,u1(m,:));
+    tk_new(m,:)= tk1;
+    m1(m,:)= cos(q_new(4*m))*a1_new(m,:)+sin(q_new(4*m))*a2_new(m,:);
+    m2(m,:)= cos(q_new(4*m))*a2_new(m,:)-sin(q_new(4*m))*a1_new(m,:);
+end
+    
+
 for i = 1:N-2
-    kappanew(i,:) = [0.2047929168960332,0];
+    k = computekappa(q_new(4*i-3:4*i-1),q_new(4*i+1:4*i+3),q_new(4*i+5:4*i+7), ...
+        m1(i,:),m2(i,:),m1(i+1,:),m2(i+1,:))
+    kappanew(i,:) = k;
 end
 for j = 1:time/dt
     err = 100;
-    while err >1e-5
+    while err >1e-3
         for m = 1:N-1
             tk1 =(q_new(4*m+1:4*m+3) - q_new(4*m-3:4*m-1))/norm((q_new(4*m+1:4*m+3) - q_new(4*m-3:4*m-1)));
             if j == 1
@@ -102,7 +121,7 @@ for j = 1:time/dt
         Jinv=inv(J_free);
         deltaq = Jinv *F_free;
         q_new(free_index) = q_new(free_index) - deltaq ;
-        err = sum(abs(F_free))
+        err = sum(abs(F_free));
     end
     %figure(1)
     %for i = 1:N
@@ -118,3 +137,5 @@ for j = 1:time/dt
 end
 %%
 plot(q_whole(4*N-1,:),'o')
+%%
+save('hw2p2_data.mat','q_whole','-mat')
