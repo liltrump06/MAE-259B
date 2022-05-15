@@ -22,11 +22,10 @@ function [F,Jaco]= computeF_J(N,q,l_k,EA,m1,m2,GJ,EI,kappalist,mkref,g,M,e_dis)
         Jaco(ind,ind) = Jaco(ind,ind)+dJ;
     end
     % compute external force part
-    for k = 1:N
-        grav = M(4*k-3:4*k-1,4*k-3:4*k-1)*g';
-        F(4*k-3:4*k-1) = F(4*k-3:4*k-1)- grav;
-        F(4*k-3:4*k-1) = F(4*k-3:4*k-1)-e_dis(3*k-2:3*k);
-    end
+        %grav = M(4*k-3:4*k-1,4*k-3:4*k-1)*g';
+        %F(4*k-3:4*k-1) = F(4*k-3:4*k-1)- grav;
+        F = F-e_dis;
+
     
 end
 
