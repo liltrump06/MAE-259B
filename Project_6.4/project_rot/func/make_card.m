@@ -1,0 +1,31 @@
+function [qxall,qyall,qzall] = make_card(qall,N)
+time = size(qall,2);
+qx = zeros(N,time);
+qy = zeros(N,time);
+%%
+for i = 1:N
+    qx(i,:) = qall(2*i-1,:);
+    qy(i,:) = qall(2*i,:);
+end
+qz = zeros(size(qy));
+qx50_1 = qx(50,:);
+qy50_1 = qy(50,:);
+qz50_1 = 0.05*ones(1,time);
+qx50_2 = qx(50,:);
+qy50_2 = qy(50,:);
+qz50_2 = 0.1*ones(1,time);
+qx50_3 = qx(50,:);
+qy50_3 = qy(50,:);
+qz50_3 = 0.15*ones(1,time);
+qx1_1 = qx(1,:);
+qy1_1 = qy(1,:);
+qz1_1 = 0.15*ones(1,time);
+qx1_2 = qx(1,:);
+qy1_2 = qy(1,:);
+qz1_2 = 0.1*ones(1,time);
+qx1_3 = qx(1,:);
+qy1_3 = qy(1,:);
+qz1_3 = 0.05*ones(1,time);
+qxall = [qx;qx50_1;qx50_2;qx50_3;flip(qx,1);qx1_1;qx1_2;qx1_3;qx(1,:)];
+qyall = [qy;qy50_1;qy50_2;qy50_3;flip(qy,1);qy1_1;qy1_2;qy1_3;qy(1,:)];
+qzall = [qz;qz50_1;qz50_2;qz50_3;flip(qz,1)+0.15;qz1_1;qz1_2;qz1_3;qz(1,:)];
