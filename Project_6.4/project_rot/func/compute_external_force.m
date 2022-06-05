@@ -8,8 +8,11 @@ Kp = 0.05;
 e_dis = zeros(2*N,1);
 f = 9e-3;
 if j< round(time/dt/100)
-   e_dis(2*10-1:2*10) = [-f,0];
+   e_dis(2*10-1:2*10) = [-f,0]; % slight disturbance 
 else
+    % use PD controller to control the force exerted by hand
+    % controlled by the error of y position error towards 0.03 and 
+    % the velocity error towards 0
    e_dis(1:2) = [0,4*f+Kp*(q_new(2*N)-q_new(2)-l+0.03)-Kd*qd_old(2)];
 
 end

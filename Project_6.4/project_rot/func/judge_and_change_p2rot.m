@@ -28,7 +28,6 @@ for i = 1:N
             recal = 1;
         end
     end
-    % calculate the unit normal vector at contact point
 end
 
 %% remove constraint
